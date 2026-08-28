@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# microsoft audio
+temp_response.mp3
+
 # Distribution / packaging
 .Python
 build/
