@@ -1,34 +1,50 @@
+import io
+import os
 import speech_recognition as sr
-from typing import Any, cast
+from groq import Groq
 
 class VoiceService:
-    def __init__(self):
-        self.recognizer = sr.Recognizer()
-        self.recognizer.energy_threshold = 300
-        self.recognizer.dynamic_energy_threshold = True
-        self.recognizer.pause_threshold = 1.2
-        self.recognizer.non_speaking_duration = 1
+  def __init__(self):
+    self.recognizer = sr.Recognizer()
+    self.recognizer.energy_threshold = 300
+    self.recognizer.dynamic_energy_threshold = True
 
-    def listen(self) -> str:
-        with sr.Microphone() as source:
-            print("\nPlease speak")
+    self.recognizer.pause_threshold = 0.5
+    self.recognizer.non_speaking_duration = 0.3
 
-            self.recognizer.adjust_for_ambient_noise(source, duration=0.3)
-            
-            try:
-                audio = self.recognizer.listen(source, timeout=5, phrase_time_limit=50)
-                print("Processing..")
+    # env
+    self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-                text = cast(Any, self.recognizer).recognize_google(audio)
-                print(f"You: {text}")
-                return text
+    with sr.Microphone() as source:
+      print("Calibrating ambient noise...")
+      self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
-            except sr.WaitTimeoutError:
-                print("Im sorry, please try again.")
-                return ""
-            except sr.UnknownValueError:
-                print("Im sorry, I dont understand.")
-                return ""
-            except sr.RequestError as e:
-                print(f"Error: {e}")
-                return ""
+  def listen(self) -> str:
+    with sr.Microphone() as source:
+      print("\nPlease speak")
+
+      try:
+        audio = self.recognizer.listen(source, timeout=5, phrase_time_limit=30)
+        print("Processing with Whisper...")
+
+        wav_data = audio.get_wav_data()
+        audio_file = ("speech.wav", io.BytesIO(wav_data), "audio/wav")
+
+        # supa fast
+        transcription = self.client.audio.transcriptions.create(
+            file=audio_file,
+            model="distil-whisper-large-v3-en",
+            response_format="text",
+            temperature=0.0,
+        )
+
+        text = str(transcription).strip()
+        print(f"You: {text}")
+        return text
+
+      except sr.WaitTimeoutError:
+        print("Listening timed out.")
+        return ""
+      except Exception as e:
+        print(f"Error: {e}")
+        return ""
