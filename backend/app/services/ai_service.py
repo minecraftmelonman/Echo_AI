@@ -10,7 +10,7 @@ class AIService:
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
         self.system_message: ChatCompletionMessageParam = {
             "role": "system",
-            "content": "You are Echo, a helpful, fast voice assistant. Keep answers brief (1-2 sentences) unless asked for details."
+            "content": "You are Echo, a concise voice assistant. Keep replies to 1-2 plain sentences with no markdown, asterisks, or formatting."
         }
         self.history: list[ChatCompletionMessageParam] = [self.system_message]
 
