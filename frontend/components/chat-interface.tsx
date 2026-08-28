@@ -3,13 +3,11 @@
 import { useState, useRef, useEffect, useMemo } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { ModelSelector, type ModelId } from "@/components/model-selector"
 import { MessageList } from "@/components/message-list"
 import { ChatInput } from "@/components/chat-input"
 
 export function ChatInterface() {
   const [input, setInput] = useState("")
-  const [model, setModel] = useState<ModelId>("openai/gpt-4o")
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const transport = useMemo(
@@ -31,12 +29,8 @@ export function ChatInterface() {
 
   const handleSubmit = () => {
     if (!input.trim() || isStreaming) return
-    sendMessage({ text: input }, { body: { model } })
+    sendMessage({ text: input }, { body: { model: "openai/gpt-4o" } })
     setInput("")
-  }
-
-  const handleModelChange = (newModel: ModelId) => {
-    setModel(newModel)
   }
 
   return (
@@ -45,13 +39,9 @@ export function ChatInterface() {
       <header className="flex flex-col gap-3 px-4 py-3 border-b border-border bg-card sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-base font-semibold text-foreground sm:text-lg">AI Chat</h1>
-            <span className="text-xs text-muted-foreground px-2 py-0.5 bg-secondary rounded-full hidden sm:inline">
-              Multi-Model
-            </span>
+            <h1 className="text-base font-semibold text-foreground sm:text-lg">Echo</h1>
           </div>
         </div>
-        <ModelSelector value={model} onValueChange={handleModelChange} />
       </header>
 
       {/* Messages */}
@@ -73,9 +63,6 @@ export function ChatInterface() {
             onSubmit={handleSubmit}
             disabled={isStreaming}
           />
-          <p className="text-center text-xs text-muted-foreground mt-3">
-            Currently using <span className="text-foreground font-medium">{model.split("/")[1]}</span> from {model.split("/")[0]}
-          </p>
         </div>
       </div>
     </div>
