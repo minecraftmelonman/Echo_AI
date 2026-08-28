@@ -30,10 +30,10 @@ class VoiceService:
         wav_data = audio.get_wav_data()
         audio_file = ("speech.wav", io.BytesIO(wav_data), "audio/wav")
 
-        # supa fast
+        # supa fast groq model
         transcription = self.client.audio.transcriptions.create(
             file=audio_file,
-            model="distil-whisper-large-v3-en",
+            model="whisper-large-v3-turbo",
             response_format="text",
             temperature=0.0,
         )
