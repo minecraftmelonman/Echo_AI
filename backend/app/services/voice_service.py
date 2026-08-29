@@ -13,11 +13,17 @@ class VoiceService:
 
     # check if mic is already calibrated
     self.is_calibrated = False
+    self.is_listening = False
 
     # env
     self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
+  def stop_listening(self):
+    self.is_listening = False
+
   def listen(self) -> str:
+    self.is_listening = True
+
     with sr.Microphone() as source:
 
       # only calibrate once
@@ -26,10 +32,18 @@ class VoiceService:
         print("Calibrating ambient noise...")
         self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
+      if not self.is_listening:
+        print("Stopped listening")
+
       print("\nPlease speak")
 
       try:
         audio = self.recognizer.listen(source, timeout=5, phrase_time_limit=30)
+
+        if not self.is_listening:
+          print("Mic button was turned off")
+          return ""
+        
         print("Processing with Whisper...")
 
         wav_data = audio.get_wav_data()
@@ -54,6 +68,7 @@ class VoiceService:
             "thank you.",
             "thank you",
             "thanks for watching.",
+            "."
         ]
 
         if text.lower() in hallucinations:

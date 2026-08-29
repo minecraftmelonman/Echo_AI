@@ -28,7 +28,7 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
           How can I help you today?
         </h2>
         <p className="text-muted-foreground max-w-md text-pretty">
-          Select a model from the dropdown above and start chatting. You can switch between models at any time.
+          Start chatting below or press the mic button to talk in real time to Echo AI.
         </p>
       </div>
     )
