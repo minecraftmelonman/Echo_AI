@@ -11,15 +11,21 @@ class VoiceService:
     self.recognizer.pause_threshold = 1.0
     self.recognizer.non_speaking_duration = 0.5
 
+    # check if mic is already calibrated
+    self.is_calibrated = False
+
     # env
     self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-    with sr.Microphone() as source:
-      print("Calibrating ambient noise...")
-      self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
-
   def listen(self) -> str:
     with sr.Microphone() as source:
+
+      # only calibrate once
+      if not self.is_calibrated:
+        self.is_calibrated = True
+        print("Calibrating ambient noise...")
+        self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
+
       print("\nPlease speak")
 
       try:
@@ -34,7 +40,7 @@ class VoiceService:
             file=audio_file,
             model="whisper-large-v3-turbo",
             response_format="text",
-            temperature=0.2,
+            temperature=0.0,
             prompt=(
                 "Literal transcription of natural spoken dialogue in English."
                 "Transcribe all words exactly as spoken without summarizing."
@@ -42,6 +48,18 @@ class VoiceService:
         )
 
         text = str(transcription).strip()
+
+        # for some reason it keeps thinking im saying thank you??? if you are experiencing smth similar just add it to the table
+        hallucinations = [
+            "thank you.",
+            "thank you",
+            "thanks for watching.",
+        ]
+
+        if text.lower() in hallucinations:
+            print("Listening hallucinated")
+            return ""
+
         print(f"You: {text}")
         return text
 

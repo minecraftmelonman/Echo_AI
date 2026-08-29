@@ -34,7 +34,7 @@ class AIService:
             return ai_reply
 
         except Exception as e:
-            return f"Error connecting to AI service: {e}"
+            return f"Error: {e}"
 
     def reset_history(self):
         self.history = [self.system_message]

@@ -1,13 +1,7 @@
 pnpm dev:frontend
 to start frontend
 
+to start fastapi:
+
 $env:PYTHONPATH="backend"
-uvicorn backend.app.main:app --reload --port 8000
-
-to start fastapi OR
-
-$env:PYTHONPATH="."
-uvicorn backend.app.main:app --reload --port 8000
-
-$env:PYTHONPATH="."
 uvicorn backend.app.main:app --reload --port 8000

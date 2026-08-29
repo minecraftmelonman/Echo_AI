@@ -35,17 +35,15 @@ def speak_blocking(text: str):
     finally:
         is_speaking = False
 
-
 def speak_async(text: str):
     thread = threading.Thread(target=speak_blocking, args=(text,), daemon=True)
     thread.start()
-
 
 @app.get("/")
 def root():
     return {"status": "online", "message": "active"}
 
-
+# localhost:3000/chat
 @app.post("/chat")
 def chat(request: ChatRequest):
     global is_speaking
@@ -63,7 +61,7 @@ def chat(request: ChatRequest):
 
     return {"user_prompt": request.prompt, "echo_response": response}
 
-
+# localhost:3000/listen
 @app.get("/listen")
 def listen_and_respond():
     global is_speaking
