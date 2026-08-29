@@ -24,10 +24,8 @@ voice = VoiceService()
 
 is_speaking = False
 
-
 class ChatRequest(BaseModel):
     prompt: str
-
 
 def speak_blocking(text: str):
     global is_speaking
@@ -50,8 +48,13 @@ def root():
 
 @app.post("/chat")
 def chat(request: ChatRequest):
+    global is_speaking
+
     if not request.prompt.strip():
         raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
+
+    while is_speaking:
+        time.sleep(0.1)
 
     response = assistant.generate_response(request.prompt)
     print(f"Echo (text): {response}\n")

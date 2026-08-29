@@ -6,11 +6,10 @@ from groq import Groq
 class VoiceService:
   def __init__(self):
     self.recognizer = sr.Recognizer()
-    self.recognizer.energy_threshold = 300
+    self.recognizer.energy_threshold = 200
     self.recognizer.dynamic_energy_threshold = True
-
-    self.recognizer.pause_threshold = 0.5
-    self.recognizer.non_speaking_duration = 0.3
+    self.recognizer.pause_threshold = 1.0
+    self.recognizer.non_speaking_duration = 0.5
 
     # env
     self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
@@ -35,7 +34,11 @@ class VoiceService:
             file=audio_file,
             model="whisper-large-v3-turbo",
             response_format="text",
-            temperature=0.0,
+            temperature=0.2,
+            prompt=(
+                "Literal transcription of natural spoken dialogue in English."
+                "Transcribe all words exactly as spoken without summarizing."
+            ),
         )
 
         text = str(transcription).strip()
