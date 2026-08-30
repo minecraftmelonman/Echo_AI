@@ -3,7 +3,7 @@
 # set pythonpath to backend, because it works that way
 export PYTHONPATH=backend
 
-pnpm --dir frontend dev:frontend &
+pnpm --dir frontend dev &
 FRONTEND_PID=$!
 
 # handles linux + macos
