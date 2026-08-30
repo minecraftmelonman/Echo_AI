@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-# set pythonpath to backend, because it works that way
+cd "$(dirname "$0")"
 export PYTHONPATH=backend
+
+if [ ! -d ".venv" ]; then
+  python3 -m venv .venv
+fi
+
+.venv/bin/python -m pip install -r backend/requirements.txt
 
 pnpm --dir frontend dev &
 FRONTEND_PID=$!
 
-# handles linux + macos
 sleep 2
 if command -v open > /dev/null; then
   open http://localhost:8000
@@ -16,4 +21,4 @@ fi
 
 trap "kill $FRONTEND_PID" EXIT
 
-uv run uvicorn backend.app.main:app --reload --port 8000
+.venv/bin/python -m uvicorn backend.app.main:app --reload --port 8000
