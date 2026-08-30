@@ -1,9 +1,11 @@
 import json
 import threading
 import time
+import os
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app.services.ai_service import AIService
@@ -46,7 +48,7 @@ def speak_async(text: str):
     thread = threading.Thread(target=speak_blocking, args=(text,), daemon=True)
     thread.start()
 
-@app.get("/")
+@app.get("/api/health")
 def root():
     return {"status": "online", "message": "active"}
 
@@ -111,3 +113,10 @@ def stop_listen():
 def get_status():
     global is_speaking
     return {"is_speaking": is_speaking}
+
+frontend_out = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "out")
+)
+
+if os.path.exists(frontend_out):
+    app.mount("/", StaticFiles(directory=frontend_out, html=True), name="static")

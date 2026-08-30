@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   typescript: {
     ignoreBuildErrors: true,
-    allowedDevOrigins: true,
   },
   images: {
     unoptimized: true,
