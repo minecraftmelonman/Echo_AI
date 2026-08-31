@@ -29,9 +29,10 @@
 
 ## Requirements
 
- - [Python (3.10 or higher)](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [pnpm/npm](https://github.com/matiassingers/awesome-readme)
- - [Node.js](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [Python (3.10 or higher)](https://www.python.org/)
+ - [pnpm/npm](https://pnpm.io/)
+ - [Node.js](https://nodejs.org/en)
+ - [Internet connection](https://www.google.com/search?q=buy+internet)
 
 
 ## Installation
