@@ -11,10 +11,14 @@ if not exist ".venv" (
     python -m venv .venv
 )
 
-:: Sync all requirements into .venv
+:: Sync dependencies into .venv
 call .venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 
-start http://localhost:8000
+:: Launch pnpm dev in a NEW separate terminal window
+start "Echo AI - Frontend" cmd /k "cd frontend && pnpm dev"
 
-:: Run uvicorn using .venv's Python executable
+:: Open browser
+start http://localhost:3000
+
+:: Run uvicorn in the CURRENT terminal window
 call .venv\Scripts\python.exe -m uvicorn app.main:app --reload --reload-dir backend --port 8000
