@@ -1,4 +1,3 @@
-
 # Echo AI
 ![Static Badge](https://img.shields.io/badge/coverage-95%25-green)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
@@ -8,8 +7,7 @@
 
 ## Demo
 
-Insert gif or link to demo
-
+<img width="800" height="487" alt="echo_demo_video_gif" src="https://github.com/user-attachments/assets/431d5c4e-3b3d-42cc-989d-a0a6aa0a689a" />
 
 ## Who It's For
 
